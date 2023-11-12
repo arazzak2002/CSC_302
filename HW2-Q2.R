@@ -1,4 +1,4 @@
-setwd("C:\\Users\\Abdulrahman Razzak\\Documents\\Classes second half of fall\\CSC 302\\") # Sets the location of the csv file
+setwd("C:\\PATH\\CSC 302\\") # Sets the location of the csv file
 df <- read.csv("WorldCupMatches.csv") # Reads the CSV File and then  assigns it to the databse "df" 
 ncol(df) # Counts the number of columns in the data frame
 nrow(df) # Counts the number of rows in the data frame
