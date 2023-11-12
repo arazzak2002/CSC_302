@@ -1,4 +1,4 @@
-setwd("C:\\Users\\Abdulrahman Razzak\\Documents\\Classes second half of fall\\CSC 302\\") # Sets the location of the csv file
+setwd("C:\\PATH\\CSC 302\\") # Sets the location of the csv file
 df <- read.csv("metabolite.csv") # Reads the CSV File and then  assigns it to the databse "df" 
 num_alzheimers <- sum(df$Label == "Alzheimer", na.rm = TRUE) #a) Finds the number of Alzheimer's patients in the dataset.
 head(num_alzheimers) # Prints the number of Alzheimetr paitents
