@@ -1,0 +1,60 @@
+# Define the groups you want to add
+$groupNames = @("Group1", "Group2", "Group3") # Add your group names here
+
+# Function to log messages
+function Write-Log {
+    param (
+        [string]$message
+    )
+    Write-Output $message
+}
+
+# Process each group
+foreach ($groupName in $groupNames) {
+    # Add group if it doesn't exist
+    try {
+        $groupExists = Get-LocalGroup -Name $groupName -ErrorAction SilentlyContinue
+        if (-not $groupExists) {
+            New-LocalGroup -Name $groupName
+            Write-Log "Group '$groupName' created."
+        } else {
+            Write-Log "Group '$groupName' already exists."
+        }
+    } catch {
+        Write-Log "Error creating group '$groupName': $_"
+        exit 1
+    }
+
+    # Add the group to all local users
+    try {
+        $users = Get-LocalUser
+        foreach ($user in $users) {
+            Add-LocalGroupMember -Group $groupName -Member $user.Name -ErrorAction Stop
+            Write-Log "Added group '$groupName' to user $($user.Name)."
+        }
+    } catch {
+        Write-Log "Error adding group '$groupName' to users: $_"
+        exit 2
+    }
+
+    # Optionally, add the group to other groups
+    $otherGroups = @("Administrators", "Users") # Modify as needed
+
+    foreach ($group in $otherGroups) {
+        try {
+            $groupExists = Get-LocalGroup -Name $group -ErrorAction SilentlyContinue
+            if ($groupExists) {
+                Add-LocalGroupMember -Group $group -Member $groupName -ErrorAction Stop
+                Write-Log "Added group '$groupName' to group '$group'."
+            } else {
+                Write-Log "Group '$group' does not exist."
+            }
+        } catch {
+            Write-Log "Error adding group '$groupName' to group '$group': $_"
+            exit 3
+        }
+    }
+}
+
+# Successful completion
+exit 0
